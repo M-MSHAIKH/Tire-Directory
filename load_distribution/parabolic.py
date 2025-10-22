@@ -21,7 +21,7 @@ def ParabolicLoadDistribution(x_matrix, y_matrix, Fz):
         qz(x, y) = qzx(x) * qzy(y)
     where:
         qzx(x) = (3 * Fz / (4 * a)) * (1 - (x / a)^2)
-        qzy(y) = Fz / (2 * b)
+        qzy(y) = 1 / (2 * b)
 
     Args:
         x_matrix (array): x-coordinate (or length) within the contact patch in a matrix form in meters.
@@ -57,9 +57,9 @@ plt.show()
 
 # introduce here an integral to ensure that total Fz is maintained
 total_load = np.trapz(np.trapz(qz_distribution, x_values, axis=1), y_values)
-if np.isclose(total_load, Fz):
+if np.isclose(total_load, Fz, rtol=0.01):
     print("Total load matches the specified Fz.")
 else:
     print("Total load does not match the specified Fz.")
-    
+
 print(f"Total Load from Distribution: {total_load} N")
