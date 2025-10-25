@@ -42,24 +42,26 @@ def ParabolicLoadDistribution(x_matrix, y_matrix, Fz):
 
     qz = np.dot(qzx, qzy)
 
+    # introduce here an integral to ensure that total Fz is maintained
+    total_load = np.trapz(np.trapz(qz, x_values, axis=1), y_values)
+    if np.isclose(total_load, Fz, rtol=0.01):
+        print("Total load matches the specified Fz.")
+    else:
+        print("Total load does not match the specified Fz.")
+        print(f"Total Load from Distribution: {total_load} N")
+
     return qz
 
+def plot_load_distribution(x, y, qz):
+    """Plot the load distribution over the tire contact patch."""
+
+    fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
+    ax.plot_surface(x, y, qz, cmap='viridis')
+    ax.set_xlabel('X (m)')
+    ax.set_ylabel('Y (m)')
+    ax.set_zlabel('Load Distribution qz (N/m²)')
+    ax.set_title('Parabolic Load Distribution over Tire Contact Patch')
+    plt.show()
+
 qz_distribution = ParabolicLoadDistribution(x_matrix, y_matrix, Fz)
-
-
-fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
-ax.plot_surface(x_matrix, y_matrix, qz_distribution, cmap='viridis')
-ax.set_xlabel('X (m)')
-ax.set_ylabel('Y (m)')
-ax.set_zlabel('Load Distribution qz (N/m²)')
-ax.set_title('Parabolic Load Distribution over Tire Contact Patch')
-plt.show()
-
-# introduce here an integral to ensure that total Fz is maintained
-total_load = np.trapz(np.trapz(qz_distribution, x_values, axis=1), y_values)
-if np.isclose(total_load, Fz, rtol=0.01):
-    print("Total load matches the specified Fz.")
-else:
-    print("Total load does not match the specified Fz.")
-
-print(f"Total Load from Distribution: {total_load} N")
+plot_load_distribution(x_matrix, y_matrix, qz_distribution)
