@@ -63,5 +63,6 @@ def plot_load_distribution(x, y, qz):
     ax.set_title('Parabolic Load Distribution over Tire Contact Patch')
     plt.show()
 
+
 qz_distribution = ParabolicLoadDistribution(x_matrix, y_matrix, Fz)
 plot_load_distribution(x_matrix, y_matrix, qz_distribution)
